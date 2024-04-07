@@ -4,7 +4,7 @@
 
 
 
-std::vector<ServicesState> checkServices(const std::vector<const char *> & servNames) {
+std::vector<ServicesState> checkServices(const std::vector<std::string> & servNames) {
     if (servNames.empty()) {
         return std::vector<ServicesState>();
     }
@@ -30,7 +30,7 @@ std::vector<ServicesState> checkServices(const std::vector<const char *> & servN
 
     for (int i=0; i<servNames.size(); ++i) {
         //schService = OpenServiceA(schSCManager, servNames[i], SERVICE_ALL_ACCESS);
-        schService = OpenServiceA(schSCManager, servNames[i], SERVICE_QUERY_CONFIG | SERVICE_QUERY_STATUS);
+        schService = OpenServiceA(schSCManager, servNames[i].c_str(), SERVICE_QUERY_CONFIG | SERVICE_QUERY_STATUS);
 
         if (schService == 0) {
             continue;

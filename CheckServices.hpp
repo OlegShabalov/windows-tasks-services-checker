@@ -2,6 +2,7 @@
 #define CHECKSERVICES_HPP
 
 #include <vector>
+#include <string>
 
 
 
@@ -32,7 +33,7 @@ struct ServicesState {
 
 
 
-std::vector<ServicesState> checkServices(const std::vector<const char *> & servNames);
+std::vector<ServicesState> checkServices(const std::vector<std::string> & servNames);
 
 
 

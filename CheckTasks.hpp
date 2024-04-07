@@ -1,6 +1,8 @@
 #ifndef CHECKTASKS_HPP
 #define CHECKTASKS_HPP
 
+#include <string>
+
 
 
 enum TaskState {
@@ -11,7 +13,7 @@ enum TaskState {
 
 
 
-TaskState checkTask(const wchar_t * path, const wchar_t * name);
+TaskState checkTask(const std::wstring & path, const std::wstring & name);
 
 
 

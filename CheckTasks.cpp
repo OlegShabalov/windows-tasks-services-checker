@@ -6,7 +6,7 @@
 
 
 
-TaskState checkTask(const wchar_t * path, const wchar_t * name) {
+TaskState checkTask(const std::wstring & path, const std::wstring & name) {
     CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
     ITaskService * taskService = NULL;
@@ -29,14 +29,14 @@ TaskState checkTask(const wchar_t * path, const wchar_t * name) {
         return TaskState::ERROR_TS;
     }
 
-    hr = taskService->GetFolder(_bstr_t(path), &taskFolder);
+    hr = taskService->GetFolder(_bstr_t(path.c_str()), &taskFolder);
     if (FAILED(hr)) {
         taskService->Release();
         CoUninitialize();
         return TaskState::ERROR_TS;
     }
 
-    hr = taskFolder->GetTask(_bstr_t(name), &registeredTask);
+    hr = taskFolder->GetTask(_bstr_t(name.c_str()), &registeredTask);
     if (FAILED(hr)) {
         taskFolder->Release();
         taskService->Release();
