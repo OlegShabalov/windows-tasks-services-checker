@@ -118,7 +118,7 @@ std::wstring ConfigReader::_readLine(std::wifstream & file) {
 
         if (line.empty()) { continue; }
 
-        const size_t pos = line.find_first_of(L"//");
+        const size_t pos = line.find(L"//");
         if (pos == 0) { continue; }
 
         if (pos != std::wstring::npos) {
