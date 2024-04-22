@@ -9,8 +9,9 @@ int main() {
     cr.readConfig();
 
     if (!cr.readConfig()) {
-        std::wcout << L"Error" << std::endl;
-        return 0;
+        std::wcout << cr.getErrorMessage() << std::endl;
+        std::cin.get();
+        return 1;
     }
 
     const std::vector<ServiceInfo> & requiredServStates = cr.getServicesInfo();
@@ -37,4 +38,5 @@ int main() {
     c.print(requiredServStates, servState, requiredTaskStates, taskState);
 
     std::cin.get();
+    return 0;
 }

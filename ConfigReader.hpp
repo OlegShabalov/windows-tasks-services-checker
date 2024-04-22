@@ -26,19 +26,21 @@ class ConfigReader {
 public:
     bool readConfig(const std::string & fileName = "config.txt");
 
+    const std::wstring & getErrorMessage() const;
+
     const std::vector<ServiceInfo> & getServicesInfo() const;
     const std::vector<TaskInfo> & getTaskInfo() const;
 
 private:
     static void _removeSpaces(std::wstring & line);
     static std::wstring _readLine(std::wifstream & file);
-    static std::vector<TaskState> _parseTaskState(std::wstring & line);
+    static std::vector<TaskState> _parseTaskState(std::wstring line);
 
     static std::vector<ServicesState::CurrentState>
-    _parseServicesCurrentState(std::wstring & line);
+    _parseServicesCurrentState(std::wstring line);
 
     static std::vector<ServicesState::StartType>
-    _parseServicesStartType(std::wstring & line);
+    _parseServicesStartType(std::wstring line);
 
 private:
     enum _Section : char {
@@ -51,6 +53,7 @@ private:
     std::vector<ServiceInfo> _servicesInfo;
     std::vector<TaskInfo> _tasksInfo;
     _Section _curentSection;
+    std::wstring _errorMessage;
 };
 
 

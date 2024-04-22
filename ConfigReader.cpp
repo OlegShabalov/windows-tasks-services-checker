@@ -6,6 +6,7 @@
 
 
 bool ConfigReader::readConfig(const std::string & fileName) {
+    _errorMessage.clear();
     _servicesInfo.clear();
     _tasksInfo.clear();
     _curentSection = None;
@@ -14,6 +15,8 @@ bool ConfigReader::readConfig(const std::string & fileName) {
     file.open(fileName);
 
     if (!file.is_open()) {
+        _errorMessage = L"Failed to open file: " +
+                        std::wstring(fileName.begin(), fileName.end()) + L".";
         return false;
     }
 
@@ -32,13 +35,29 @@ bool ConfigReader::readConfig(const std::string & fileName) {
             continue;
         }
         else if (_curentSection == None) {
+            _errorMessage = L"Section type not assigned. "
+                             "Use SERVICES or TASKS "
+                             "to specify the section type.";
             return false;
         }
         else if (_curentSection == Services) {
             std::wstring currentStateLine = _readLine(file);
+
+            if (currentStateLine.empty()) {
+                _errorMessage = L"Service is not fully defined:\n"
+                                 "Name: " + line + L"\n"
+                                 "Required state: ???\n"
+                                 "Startup type:   ???";
+                return false;
+            }
+
             std::wstring startTypeLine = _readLine(file);
 
-            if (currentStateLine.empty() || startTypeLine.empty()) {
+            if (startTypeLine.empty()) {
+                _errorMessage = L"Service is not fully defined:\n"
+                                 "Name: " + line + L"\n"
+                                 "Required state: " + currentStateLine + L"\n"
+                                 "Startup type:   ???";
                 return false;
             }
 
@@ -46,6 +65,12 @@ bool ConfigReader::readConfig(const std::string & fileName) {
                 _parseServicesCurrentState(currentStateLine);
 
             if (currentState.empty()) {
+                _errorMessage = L"Required state of the service is "
+                                 "incorrectly specified: " + currentStateLine +
+                                L"\nAvailable values:\n"
+                                 "ERROR | STOPPED | RUNNING | PAUSED | "
+                                 "START_PENDING | STOP_PENDING | "
+                                 "CONTINUE_PENDING | PAUSE_PENDING";
                 return false;
             }
 
@@ -53,6 +78,11 @@ bool ConfigReader::readConfig(const std::string & fileName) {
                 _parseServicesStartType(startTypeLine);
 
             if (startType.empty()) {
+                _errorMessage = L"Startup type of the service is "
+                                 "incorrectly specified: " + startTypeLine +
+                                L"\nAvailable values:\n"
+                                 "ERROR | DISABLED | DEMAND_START | "
+                                 "AUTO_START | SYSTEM_START | BOOT_START";
                 return false;
             }
 
@@ -65,15 +95,32 @@ bool ConfigReader::readConfig(const std::string & fileName) {
         }
         else if (_curentSection == Tasks) {
             std::wstring taskName = _readLine(file);
+
+            if (taskName.empty()) {
+                _errorMessage = L"Task is not fully defined:\n"
+                                 "Path:  " + line + L"\n"
+                                 "Name:  ???\n"
+                                 "State: ???";
+                return false;
+            }
+
             std::wstring stateLine = _readLine(file);
 
-            if (taskName.empty() || stateLine.empty()) {
+            if (stateLine.empty()) {
+                _errorMessage = L"Task is not fully defined:\n"
+                                 "Path:  " + line + L"\n"
+                                 "Name:  " + taskName + L"\n"
+                                 "State: ???";
                 return false;
             }
 
             std::vector<TaskState> states = _parseTaskState(stateLine);
 
             if (states.empty()) {
+                _errorMessage = L"Required state of the task is "
+                                 "incorrectly specified: " + stateLine +
+                                L"\nAvailable values:\n"
+                                 "ERROR | DISABLED | NOT_DISABLED";
                 return false;
             }
 
@@ -90,6 +137,10 @@ bool ConfigReader::readConfig(const std::string & fileName) {
 }
 
 
+
+const std::wstring & ConfigReader::getErrorMessage() const {
+    return _errorMessage;
+}
 
 const std::vector<ServiceInfo> & ConfigReader::getServicesInfo() const {
     return _servicesInfo;
@@ -134,7 +185,7 @@ std::wstring ConfigReader::_readLine(std::wifstream & file) {
     return std::wstring();
 }
 
-std::vector<TaskState> ConfigReader::_parseTaskState(std::wstring & line) {
+std::vector<TaskState> ConfigReader::_parseTaskState(std::wstring line) {
     std::vector<TaskState> result;
 
     wchar_t * pwc = std::wcstok(&line[0], L"|");
@@ -163,7 +214,7 @@ std::vector<TaskState> ConfigReader::_parseTaskState(std::wstring & line) {
 }
 
 std::vector<ServicesState::CurrentState>
-ConfigReader::_parseServicesCurrentState(std::wstring & line) {
+ConfigReader::_parseServicesCurrentState(std::wstring line) {
     std::vector<ServicesState::CurrentState> result;
 
      wchar_t * pwc = std::wcstok(&line[0], L"|");
@@ -207,7 +258,7 @@ ConfigReader::_parseServicesCurrentState(std::wstring & line) {
 }
 
 std::vector<ServicesState::StartType>
-ConfigReader::_parseServicesStartType(std::wstring & line) {
+ConfigReader::_parseServicesStartType(std::wstring line) {
     std::vector<ServicesState::StartType> result;
 
      wchar_t * pwc = std::wcstok(&line[0], L"|");
