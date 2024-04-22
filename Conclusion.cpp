@@ -26,18 +26,19 @@ void Conclusion::print(const std::vector<ServiceInfo> & requiredServStates,
     }
 
     for (int i=0; i<requiredServStates.size(); ++i) {
-        std::wcout << requiredServStates[i].name << L'\n';
+        std::wcout << i+1 << L") " <<
+                      requiredServStates[i].name << L'\n';
 
         if (_stateIn(currentServStates[i].currentState,
                      requiredServStates[i].requiredCurrentState))
         {
             _setGreenColor();
-            std::wcout << L"OK:  ";
+            std::wcout << L" OK:  ";
             _setDefaultColor();
         }
         else {
             _setRedColor();
-            std::wcout << L"BAD: ";
+            std::wcout << L" BAD: ";
             _setDefaultColor();
             _allServicesOkey = false;
         }
@@ -53,12 +54,12 @@ void Conclusion::print(const std::vector<ServiceInfo> & requiredServStates,
                      requiredServStates[i].requiredStartType))
         {
             _setGreenColor();
-            std::wcout << L"OK:  ";
+            std::wcout << L" OK:  ";
             _setDefaultColor();
         }
         else {
             _setRedColor();
-            std::wcout << L"BAD: ";
+            std::wcout << L" BAD: ";
             _setDefaultColor();
             _allServicesOkey = false;
         }
@@ -80,17 +81,18 @@ void Conclusion::print(const std::vector<ServiceInfo> & requiredServStates,
     }
 
     for (int i=0; i<requiredTaskStates.size(); ++i) {
-        std::wcout << requiredTaskStates[i].taskName << L" | " <<
+        std::wcout << i+1 << L") " <<
+                      requiredTaskStates[i].taskName << L" | " <<
                       requiredTaskStates[i].taskPath << L'\n';
 
         if (_stateIn(currentTaskStates[i], requiredTaskStates[i].requiredState)) {
             _setGreenColor();
-            std::wcout << L"OK:  ";
+            std::wcout << L" OK:  ";
             _setDefaultColor();
         }
         else {
             _setRedColor();
-            std::wcout << L"BAD: ";
+            std::wcout << L" BAD: ";
             _setDefaultColor();
             _allTasksOkey = false;
         }
@@ -107,7 +109,7 @@ void Conclusion::print(const std::vector<ServiceInfo> & requiredServStates,
 
     std::wcout << L"\n\nSUMMARY:\n";
 
-    std::wcout << L"Services: ";
+    std::wcout << L" Services: ";
     if (_allServicesOkey) {
         _setGreenColor();
         std::wcout << L"OK\n";
@@ -119,7 +121,7 @@ void Conclusion::print(const std::vector<ServiceInfo> & requiredServStates,
         _setDefaultColor();
     }
 
-    std::wcout << L"Tasks:    ";
+    std::wcout << L" Tasks:    ";
     if (_allTasksOkey) {
         _setGreenColor();
         std::wcout << L"OK\n";
