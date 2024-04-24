@@ -18,3 +18,6 @@ set(PROJECT_SOURCES
 add_executable(TasksServicesChecker ${PROJECT_SOURCES})
 
 target_link_libraries(TasksServicesChecker PRIVATE -ltaskschd -lole32 -loleaut32)
+
+set(CONFIG_FILE "${CMAKE_SOURCE_DIR}/config.txt")
+configure_file(${CONFIG_FILE} ${CMAKE_BINARY_DIR}/config.txt COPYONLY)

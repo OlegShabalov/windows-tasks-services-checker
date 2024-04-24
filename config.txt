@@ -1,0 +1,55 @@
+// This is an example of file configuration
+// Customize the file contents to suit your needs
+
+
+// This is a comment
+// Comments start with two forward slashes
+
+
+
+// Begin services section
+SERVICES
+
+// To declare a service you need to set the following three fields:
+//     Service name (not display name)
+//     Required state
+//     Startup type
+
+// Available values of required state:
+// ERROR | STOPPED | RUNNING | PAUSED | START_PENDING | STOP_PENDING | CONTINUE_PENDING | PAUSE_PENDING
+
+// Available values of startup type:
+// ERROR | DISABLED | DEMAND_START | AUTO_START | SYSTEM_START | BOOT_START
+
+
+
+Dhcp                      // Service name
+RUNNING | PAUSED          // Required state
+AUTO_START | DEMAND_START // Startup type
+
+RemoteRegistry
+STOPPED
+DISABLED
+
+NotExistentService
+ERROR
+ERROR
+
+
+
+// Begin tasks section
+TASKS
+
+// To declare a task you need to set the following three fields:
+//     Task path
+//     Task name
+//     Required state
+
+// Available values of required state:
+// ERROR | DISABLED | NOT_DISABLED
+
+
+
+\Microsoft\Windows\Defrag // Task path
+ScheduledDefrag           // Task name
+DISABLED                  // Required state
